@@ -79,7 +79,7 @@ namespace SimpleWebApp
 				{
 					// * будут проблемы
 					PredictionsManager pm = new PredictionsManager();
-					//var query = context.Request.Query;
+					string query = context.Request.Query["newPrediction"];
 					pm.AddPrediction("Новая строка");
 				});
 			});
