@@ -70,19 +70,17 @@ namespace SimpleWebApp
 
 				endpoints.MapGet("/randomPrediction", async context => 
 				{
-					// * будут проблемы
 					var pm = app.ApplicationServices.GetService<PredictionsManager>();
 					var s = pm.GetRandomPrediction();
 					await context.Response.WriteAsync(s);
 				});
 
-				endpoints.MapGet("/addPrediction", async context =>
+				endpoints.MapPost("/addPrediction", async context =>
 				{
-					// * будут проблемы
 					var pm = app.ApplicationServices.GetService<PredictionsManager>();
-					string query = context.Request.Query["newPrediction"];
-					string prediction2 = context.Request.Query["newPrediction2"]; // для примера
-					pm.AddPrediction(query);
+					var query = await context.Request.ReadFromJsonAsync<Prediction>();
+
+					pm.AddPrediction(query.PredictionString);
 				});
 			});
 		}

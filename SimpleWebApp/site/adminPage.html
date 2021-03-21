@@ -47,7 +47,16 @@
     <script>
         function onAddButtonClick() {
             var prediction = document.getElementById("newPredictionInput").value
-            fetch("/addprediction?newPrediction=" + prediction + "&newPrediction2=" + prediction)
+            //fetch("/addprediction?newPrediction=" + prediction + "&newPrediction2=" + prediction, "POST")
+
+            fetch("/addprediction", {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({ PredictionString: prediction }) // body data type must match "Content-Type" header
+            });
         }
     </script>
    
