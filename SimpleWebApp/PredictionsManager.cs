@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+	
 namespace SimpleWebApp
 {
 	public class PredictionsManager
 	{
 		private Random rnd = new Random(); 
-		private List<string> predictions = new List<string>() 
+		private List<Prediction> predictions = new List<Prediction>() 
 		{
-			"Да",
-			"Нет",
-			"Не знаю"
+			new Prediction("Да"),
+			new Prediction("Нет"),
+			new Prediction("Не знаю")
 		};
 
-		public string GetRandomPrediction()
+		public List<Prediction> GetAllPredictions() 
+		{
+			return predictions;
+		}
+
+		public Prediction GetRandomPrediction()
 		{
 			int randomNumber = rnd.Next(0, predictions.Count);
 			return predictions[randomNumber];
@@ -23,7 +26,7 @@ namespace SimpleWebApp
 
 		public void AddPrediction(string prediction)
 		{
-			predictions.Add(prediction);
+			predictions.Add(new Prediction(prediction));
 		}
 	}
 }
