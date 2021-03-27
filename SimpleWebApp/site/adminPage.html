@@ -56,6 +56,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Prediction text</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody id="savedPredictionsTable">
@@ -65,15 +66,13 @@
     <script>
         async function onAddButtonClick() {
             var prediction = document.getElementById("newPredictionInput").value
-            //fetch("/addprediction?newPrediction=" + prediction + "&newPrediction2=" + prediction, "POST")
 
             await fetch("/addprediction", {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({ PredictionString: prediction }) // body data type must match "Content-Type" header
+                body: JSON.stringify({ PredictionString: prediction })
             });
 
             await updatePredictionsList()
@@ -92,13 +91,28 @@
 
             for (var i = 0; i < predictions.length; i++) {
                 var newTr = document.createElement("tr");
-                newTr.innerHTML = `                
-                <tr>
-                    <th scope="row">${i}</th>
-                    <td>${predictions[i].predictionString}</td>
-                </tr>`;
+                newTr.innerHTML = `
+                    <tr>
+                        <th scope="row">${i}</th>
+                        <td>${predictions[i].predictionString}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="removePrediction(${i})">🗑</button>
+                        </td>
+                    </tr>`;
                 predictionsTableElement.append(newTr)
             }
+        }
+
+        async function removePrediction(i) {
+            await fetch("/deletePrediction", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(i)
+            });
+
+            await updatePredictionsList()
         }
     </script>
 

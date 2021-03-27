@@ -28,5 +28,10 @@ namespace SimpleWebApp
 		{
 			predictions.Add(new Prediction(prediction));
 		}
+
+		internal void DeletePrediction(int predictionNumber)
+		{
+			predictions.RemoveAt(predictionNumber);
+		}
 	}
 }

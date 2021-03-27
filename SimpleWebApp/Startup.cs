@@ -3,11 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleWebApp
 {
@@ -88,6 +84,13 @@ namespace SimpleWebApp
 					var pm = app.ApplicationServices.GetService<PredictionsManager>();
 
 					await context.Response.WriteAsJsonAsync(pm.GetAllPredictions());
+				});
+
+				endpoints.MapDelete("/deletePrediction", async context =>
+				{
+					var pm = app.ApplicationServices.GetService<PredictionsManager>();
+					var predictionNumber = await context.Request.ReadFromJsonAsync<int>();
+					pm.DeletePrediction(predictionNumber);
 				});
 			});
 		}
