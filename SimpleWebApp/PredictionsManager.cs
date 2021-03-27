@@ -33,5 +33,10 @@ namespace SimpleWebApp
 		{
 			predictions.RemoveAt(predictionNumber);
 		}
+
+		internal void UpdatePrediction(PredictionUpdateRequest predictionUpdate)
+		{
+			predictions[predictionUpdate.PredictionNumber] = new Prediction(predictionUpdate.NewText);
+		}
 	}
 }

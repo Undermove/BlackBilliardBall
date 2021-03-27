@@ -92,13 +92,14 @@
             for (var i = 0; i < predictions.length; i++) {
                 var newTr = document.createElement("tr");
                 newTr.innerHTML = `
-                    <tr>
-                        <th scope="row">${i}</th>
-                        <td>${predictions[i].predictionString}</td>
-                        <td>
-                            <button class="btn btn-danger" onclick="removePrediction(${i})">🗑</button>
-                        </td>
-                    </tr>`;
+                        <tr>
+                            <th scope="row">${i}</th>
+                            <td><input id="predictionText${i}" value="${predictions[i].predictionString}"></input></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="updatePrediction(${i})">🆙</button>
+                                <button class="btn btn-danger" onclick="removePrediction(${i})">🗑</button>
+                            </td>
+                        </tr>`;
                 predictionsTableElement.append(newTr)
             }
         }
@@ -110,6 +111,20 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(i)
+            });
+
+            await updatePredictionsList()
+        }
+
+        async function updatePrediction(i) {
+            var predictionText = document.getElementById(`predictionText${i}`).value
+
+            await fetch("/updatePrediction", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ predictionNumber: i, newText: predictionText })
             });
 
             await updatePredictionsList()

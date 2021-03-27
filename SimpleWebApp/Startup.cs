@@ -92,6 +92,13 @@ namespace SimpleWebApp
 					var predictionNumber = await context.Request.ReadFromJsonAsync<int>();
 					pm.DeletePrediction(predictionNumber);
 				});
+
+				endpoints.MapPut("/updatePrediction", async context =>
+				{
+					var pm = app.ApplicationServices.GetService<PredictionsManager>();
+					var predictionUpdate = await context.Request.ReadFromJsonAsync<PredictionUpdateRequest>();
+					pm.UpdatePrediction(predictionUpdate);
+				});
 			});
 		}
 	}
