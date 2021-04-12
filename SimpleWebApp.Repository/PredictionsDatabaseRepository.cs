@@ -8,9 +8,9 @@ namespace SimpleWebApp.Repository
 	{
 		public void SavePrediction(PredictionDto prediction)
 		{
-            using (IDbConnection db = new MySqlConnection("Server=127.0.0.1;Database=myDataBase;Uid=root;Pwd=my-secret-password;"))
+            using (IDbConnection db = new MySqlConnection("Server=127.0.0.1;Database=myDataBase;Uid=root;Pwd=my-secret-pw;"))
             {
-                string sqlQuery = "INSERT INTO Predictions (PredictionText) Values(@PredictionText)";
+                string sqlQuery = "INSERT INTO predictions (PredictionText) Values(@PredictionText)";
 
                 int rowsAffected = db.Execute(sqlQuery, prediction);
             }
