@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace SimpleWebApp.Repository
 {
@@ -6,7 +8,12 @@ namespace SimpleWebApp.Repository
 	{
 		public void SavePrediction(PredictionDto prediction)
 		{
-			throw new NotImplementedException();
-		}
+            using (IDbConnection db = new SqlConnection("Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;"))
+            {
+                string sqlQuery = "Insert Into Customers (FirstName, LastName, Email) Values(@FirstName, @LastName, @Email)";
+
+                int rowsAffected = db.Execute(sqlQuery, customer);
+            }
+        }
 	}
 }
