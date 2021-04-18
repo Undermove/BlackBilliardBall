@@ -2,6 +2,7 @@
 {
 	public class PredictionDto
 	{
-		public string PredictionText {get; set;}
+		public int id {get; set;}
+		public string PredictionText { get; set;}
 	}
 }

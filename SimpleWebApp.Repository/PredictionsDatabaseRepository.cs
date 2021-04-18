@@ -15,5 +15,16 @@ namespace SimpleWebApp.Repository
                 int rowsAffected = db.Execute(sqlQuery, prediction);
             }
         }
-	}
+
+
+        public PredictionDto GetPrediction(int predictionId)
+        {
+            using (IDbConnection db = new MySqlConnection("Server=127.0.0.1;Database=myDataBase;Uid=root;Pwd=my-secret-pw;"))
+            {
+                string sqlQuery = "SELECT * FROM predictions WHERE id=@id";
+
+                return db.QueryFirstOrDefault<PredictionDto>(sqlQuery, new { Id = predictionId });
+            }
+        }
+    }
 }
