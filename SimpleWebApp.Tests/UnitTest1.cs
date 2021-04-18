@@ -11,5 +11,12 @@ namespace SimpleWebApp.Tests
 			PredictionsDatabaseRepository repository = new PredictionsDatabaseRepository();
 			repository.SavePrediction(new PredictionDto() { PredictionText = "test text"});
 		}
+
+		[Fact]
+		public void Test2()
+		{
+			PredictionsDatabaseRepository repository = new PredictionsDatabaseRepository();
+			var result = repository.GetPredictionById(1);
+		}
 	}
 }

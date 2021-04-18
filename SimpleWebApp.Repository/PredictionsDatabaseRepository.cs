@@ -14,13 +14,15 @@ namespace SimpleWebApp.Repository
                 string sqlQuery = "INSERT INTO predictions (PredictionText) Values(@PredictionText)";
 
                 int rowsAffected = db.Execute(sqlQuery, prediction);
+
             }
         }
 
-        public void GetPredictionById(int id)
+        public PredictionDto GetPredictionById(int id)
         {
             using (IDbConnection db = new MySqlConnection("Server=127.0.0.1;Database=myDataBase;Uid=root;Pwd=my-secret-pw;"))
             {
+                return db.QueryFirst<PredictionDto>("SELECT * FROM predictions WHERE Id = @id", new { id });
             }
         }
     }
