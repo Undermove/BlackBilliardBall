@@ -27,7 +27,7 @@ namespace SimpleWebApp.Repository
             }
         }
 
-        public List<PredictionDto> GetAllPredictions (int id)
+        public List<PredictionDto> GetAllPredictions()
         {
             using (IDbConnection db = new MySqlConnection("Server=127.0.0.1;Database=myDataBase;Uid=root;Pwd=my-secret-pw;"))
             {

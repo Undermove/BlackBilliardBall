@@ -56,7 +56,7 @@ namespace SimpleWebApp
 				{
 					string password = "vODICHKa";
 					await context.Response.WriteAsync(password);
-				});
+				}).AllowAnonymous();
 
 				endpoints.MapGet("/login", async context =>
 				{
