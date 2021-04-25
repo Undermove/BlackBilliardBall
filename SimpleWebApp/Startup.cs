@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 
 namespace SimpleWebApp
 {
@@ -45,6 +48,25 @@ namespace SimpleWebApp
 				endpoints.MapPost("/login", async context =>
 				{
 					var credentials = await context.Request.ReadFromJsonAsync<Credentials>();
+					// с заданным логином и паролем мы пойдем в базу
+					// если в базе есть пользователь, то всё ок, если нет, то ничего не делаем
+					var fakeUser = new Credentials { Login = "superlogin", Password = "superpassword" };
+					if(credentials.Login == fakeUser.Login && credentials.Password == fakeUser.Password)
+					{
+						List<Claim> claims = new List<Claim>()
+						{
+							new Claim(ClaimsIdentity.DefaultNameClaimType, credentials.Login)
+						};
+						// создаем объект ClaimsIdentity
+						ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+
+						// добавляем куки нашему пользователю
+						await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+
+						// перенаправляем на нужную сраницу
+						context.Response.Redirect("/adminPage");
+					}
+
 					await context.Response.WriteAsync(credentials.Login);
 				});
 
