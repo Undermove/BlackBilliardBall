@@ -15,7 +15,6 @@ namespace SimpleWebApp.Repository
                 string sqlQuery = "INSERT INTO predictions (PredictionText) Values(@PredictionText)";
 
                 int rowsAffected = db.Execute(sqlQuery, prediction);
-
             }
         }
 

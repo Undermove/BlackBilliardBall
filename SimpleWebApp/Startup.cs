@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,10 @@ namespace SimpleWebApp
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddSingleton<PredictionsManager>();
+			services
+				.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(options => options.LoginPath = new PathString("/Auth"));
+			services.AddAuthorization();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -26,21 +31,30 @@ namespace SimpleWebApp
 			
 			app.UseRouting();
 
+			app.UseAuthentication();
+			app.UseAuthorization();
+
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapGet("/", async context =>
+				endpoints.MapGet("/auth", async context =>
 				{
-					string page = File.ReadAllText("site/htmlpage.html");
+					string page = File.ReadAllText("site/loginPage.html");
 					await context.Response.WriteAsync(page);
+				});
+
+				endpoints.MapPost("/login", async context =>
+				{
+					var credentials = await context.Request.ReadFromJsonAsync<Credentials>();
+					await context.Response.WriteAsync(credentials.Login);
 				});
 
 				endpoints.MapGet("/adminPage", async context =>
 				{
 					string page = File.ReadAllText("site/adminPage.html");
 					await context.Response.WriteAsync(page);
-				});
+				}).RequireAuthorization();
 
-				endpoints.MapGet("/predictionsPage", async context =>
+				endpoints.MapGet("/", async context =>
 				{
 					string page = File.ReadAllText("site/predictionsPage.html");
 					await context.Response.WriteAsync(page);
@@ -50,18 +64,6 @@ namespace SimpleWebApp
 				{
 					string page = File.ReadAllText("site/answersPage.html");
 					await context.Response.WriteAsync(page);
-				});
-
-				endpoints.MapGet("/password", async context => 
-				{
-					string password = "vODICHKa";
-					await context.Response.WriteAsync(password);
-				}).AllowAnonymous();
-
-				endpoints.MapGet("/login", async context =>
-				{
-					string login = "vodichka";
-					await context.Response.WriteAsync(login);
 				});
 
 				endpoints.MapGet("/randomPrediction", async context => 
