@@ -21,7 +21,7 @@ namespace SimpleWebApp.Repository
 			throw new NotImplementedException();
 		}
 
-		public void SavePrediction(PredictionDto prediction)
+		public void SavePrediction(string prediction)
 		{
 			throw new NotImplementedException();
 		}

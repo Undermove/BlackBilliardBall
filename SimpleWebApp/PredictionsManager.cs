@@ -29,7 +29,7 @@ namespace SimpleWebApp
 
 		public void AddPrediction(string prediction)
 		{
-			_repository.SavePrediction(new PredictionDto { PredictionText = prediction });
+			_repository.SavePrediction(prediction);
 		}
 
 		internal void DeletePrediction(int predictionNumber)

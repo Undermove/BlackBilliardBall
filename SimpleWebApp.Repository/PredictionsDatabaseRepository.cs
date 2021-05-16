@@ -8,7 +8,7 @@ namespace SimpleWebApp.Repository
 {
 	public class PredictionsDatabaseRepository : IPredictionsRepository
 	{
-		public void SavePrediction(PredictionDto prediction)
+		public void SavePrediction(string prediction)
 		{
             using (IDbConnection db = new MySqlConnection("Server=127.0.0.1;Database=myDataBase;Uid=root;Pwd=my-secret-pw;"))
             {
