@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SimpleWebApp.Repository;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
@@ -18,6 +19,7 @@ namespace SimpleWebApp
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddSingleton<PredictionsManager>();
+			services.AddSingleton<IPredictionsRepository, PredictionsDatabaseRepository>();
 			services
 				.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 				.AddCookie(options => options.LoginPath = new PathString("/Auth"));
@@ -63,7 +65,7 @@ namespace SimpleWebApp
 						// добавляем куки нашему пользователю
 						await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
 
-						// перенаправляем на нужную сраницу
+						// перенаправляем на нужную страницу
 						context.Response.Redirect("/adminPage");
 					}
 

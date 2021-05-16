@@ -9,5 +9,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleWebApp.Repository\SimpleWebApp.Repository.csproj" />
+  </ItemGroup>
 
 </Project>
