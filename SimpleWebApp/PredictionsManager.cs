@@ -17,14 +17,15 @@ namespace SimpleWebApp
 
 		public List<Prediction> GetAllPredictions() 
 		{
-			return _repository.GetAllPredictions().Select(dto => new Prediction(dto.PredictionText)).ToList();
+			return _repository.GetAllPredictions().Select(dto => new Prediction(dto.Id, dto.PredictionText)).ToList();
 		}
 
 		public Prediction GetRandomPrediction()
 		{
 			var predictions = _repository.GetAllPredictions();
 			int randomNumber = rnd.Next(0, predictions.Count);
-			return new Prediction(predictions[randomNumber].PredictionText);
+			var randomPrediction = predictions[randomNumber];
+			return new Prediction(randomPrediction.Id, randomPrediction.PredictionText);
 		}
 
 		public void AddPrediction(string prediction)
