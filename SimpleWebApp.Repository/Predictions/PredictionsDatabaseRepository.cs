@@ -12,9 +12,9 @@ namespace SimpleWebApp.Repository
 		{
             using (IDbConnection db = new MySqlConnection("Server=127.0.0.1;Database=myDataBase;Uid=root;Pwd=my-secret-pw;"))
             {
-                string sqlQuery = "INSERT INTO predictions (PredictionText) Values(@PredictionText)";
+                string sqlQuery = "INSERT INTO predictions (PredictionText) Values(@prediction)";
 
-                int rowsAffected = db.Execute(sqlQuery, prediction);
+                int rowsAffected = db.Execute(sqlQuery, new { prediction });
             }
         }
 
