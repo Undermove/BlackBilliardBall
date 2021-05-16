@@ -1,21 +1,23 @@
 ﻿using System;
+using SimpleWebApp.Repository;
 using System.Collections.Generic;
-	
+using System.Linq;
+
 namespace SimpleWebApp
 {
 	public class PredictionsManager
 	{
-		private Random rnd = new Random(); 
-		private List<Prediction> predictions = new List<Prediction>() 
+		private Random rnd = new Random();
+		IPredictionsRepository _repository = new PredictionsDatabaseRepository();
+
+		public PredictionsManager(IPredictionsRepository repository)
 		{
-			new Prediction("Да"),
-			new Prediction("Нет"),
-			new Prediction("Не знаю")
-		};
+			_repository = repository;
+		}
 
 		public List<Prediction> GetAllPredictions() 
 		{
-			return predictions;
+			return _repository.GetAllPredictions().Select(dto => new Prediction(dto.PredictionText)).ToList();
 		}
 
 		public Prediction GetRandomPrediction()
