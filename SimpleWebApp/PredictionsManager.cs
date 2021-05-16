@@ -8,7 +8,7 @@ namespace SimpleWebApp
 	public class PredictionsManager
 	{
 		private Random rnd = new Random();
-		IPredictionsRepository _repository = new PredictionsDatabaseRepository();
+		IPredictionsRepository _repository;
 
 		public PredictionsManager(IPredictionsRepository repository)
 		{
@@ -22,23 +22,28 @@ namespace SimpleWebApp
 
 		public Prediction GetRandomPrediction()
 		{
+			var predictions = _repository.GetAllPredictions();
 			int randomNumber = rnd.Next(0, predictions.Count);
-			return predictions[randomNumber];
+			return new Prediction(predictions[randomNumber].PredictionText);
 		}
 
 		public void AddPrediction(string prediction)
 		{
-			predictions.Add(new Prediction(prediction));
+			_repository.SavePrediction(new PredictionDto { PredictionText = prediction });
 		}
 
 		internal void DeletePrediction(int predictionNumber)
 		{
-			predictions.RemoveAt(predictionNumber);
+			_repository.RemovePrediction(predictionNumber);
 		}
 
 		internal void UpdatePrediction(PredictionUpdateRequest predictionUpdate)
 		{
-			predictions[predictionUpdate.PredictionNumber] = new Prediction(predictionUpdate.NewText);
+			_repository.UpdatePrediction(new PredictionDto() 
+			{ 
+				Id = predictionUpdate.PredictionNumber,
+				PredictionText = predictionUpdate.NewText
+			});
 		}
 	}
 }
