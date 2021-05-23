@@ -4,6 +4,7 @@ namespace SimpleWebApp.Repository.Users
     {
         void CreateUser(string login, string password, string email, UserRole roles);
         User GetUser(string email);
+        User GetUserByLogin(string login);
         void UpdateUser(string login, string email, UserRole role);
         void DeleteUser(string email);
     }

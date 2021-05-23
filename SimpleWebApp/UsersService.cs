@@ -27,6 +27,16 @@ namespace SimpleWebApp
 			return true;
 		}
 
+		public UserRole GetUserRole(string login)
+		{
+			return FromRepositoryUserRole(repository.GetUser(login).Role);
+		}
+
+		public User GetUserByLogin(string login)
+		{
+			return repository.GetUser(login);
+		}
+
 		private Repository.Users.UserRole ToRepositoryUserRole(UserRole role)
 		{
 			switch (role)
@@ -38,6 +48,19 @@ namespace SimpleWebApp
 				default:
 					throw new ArgumentException("Invalid user role");
 			}				
+		}
+
+		private UserRole FromRepositoryUserRole(Repository.Users.UserRole role)
+		{
+			switch (role)
+			{
+				case Repository.Users.UserRole.User:
+					return UserRole.User;
+				case Repository.Users.UserRole.Admin:
+					return UserRole.Admin;
+				default:
+					throw new ArgumentException("Invalid user role");
+			}
 		}
 	}
 }

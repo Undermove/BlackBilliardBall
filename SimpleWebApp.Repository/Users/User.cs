@@ -2,9 +2,9 @@ namespace SimpleWebApp.Repository.Users
 {
     public class User
     {
-        string Login { get; set; }
-        string Password { get; set; }
-        string Email { get; set; }
-        UserRole Role { get; set; }
+        public string Login { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public UserRole Role { get; set; }
     }
 }

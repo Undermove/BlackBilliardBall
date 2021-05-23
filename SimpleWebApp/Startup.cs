@@ -10,6 +10,7 @@ using System.IO;
 using System.Security.Claims;
 using SimpleWebApp.Repository;
 using SimpleWebApp.Repository.Users;
+using System.Text;
 
 namespace SimpleWebApp
 {
@@ -61,8 +62,9 @@ namespace SimpleWebApp
 					var credentials = await context.Request.ReadFromJsonAsync<Credentials>();
 					// с заданным логином и паролем мы пойдем в базу
 					// если в базе есть пользователь, то всё ок, если нет, то ничего не делаем
-					var fakeUser = new Credentials { Login = "superlogin", Password = "superpassword" };
-					if(credentials.Login == fakeUser.Login && credentials.Password == fakeUser.Password)
+					var usersService = app.ApplicationServices.GetService<UsersService>();
+					var user = usersService.GetUserByLogin(credentials.Login);
+					if(credentials.Login == user.Login && credentials.Password == user.Password)
 					{
 						List<Claim> claims = new List<Claim>()
 						{
@@ -85,17 +87,23 @@ namespace SimpleWebApp
 				{
 					var request = await context.Request.ReadFromJsonAsync<UserRegistrationRequest>();
 
-					var pm = app.ApplicationServices.GetService<UsersService>();
-					var isSuccess = pm.TryRegisterUser(request);
+					var usersService = app.ApplicationServices.GetService<UsersService>();
+					var isSuccess = usersService.TryRegisterUser(request);
 
 					await context.Response.WriteAsync(isSuccess.ToString());
 				});
 
 				endpoints.MapGet("/adminPage", async context =>
 				{
-					var user = context.User.Identity.Name;
-					string page = File.ReadAllText("site/adminPage.html");
-					await context.Response.WriteAsync(page);
+					var usersService = app.ApplicationServices.GetService<UsersService>();
+					var userLogin = context.User.Identity.Name;
+					var role = usersService.GetUserRole(userLogin);
+					if(role == UserRole.Admin)
+					{
+						string page = File.ReadAllText("site/adminPage.html");
+						await context.Response.WriteAsync(page);
+					}
+					await context.Response.WriteAsync("{\"result:\" \"Bad Request\"}", Encoding.UTF8);
 				}).RequireAuthorization();
 
 				endpoints.MapGet("/", async context =>

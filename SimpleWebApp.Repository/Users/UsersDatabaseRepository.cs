@@ -37,6 +37,16 @@ namespace SimpleWebApp.Repository.Users
             }
         }
 
+        public User GetUserByLogin(string login)
+        {
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                string sqlQuery = "SELECT login, password, email, userRole FROM users WHERE login = @login";
+
+                return db.QueryFirstOrDefault<User>(sqlQuery, new { login });
+            }
+        }
+
         public void UpdateUser(string login, string email, UserRole role)
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
