@@ -29,12 +29,12 @@ namespace SimpleWebApp
 
 		public UserRole GetUserRole(string login)
 		{
-			return FromRepositoryUserRole(repository.GetUser(login).Role);
+			return FromRepositoryUserRole(repository.GetUserByLogin(login).UserRole);
 		}
 
 		public User GetUserByLogin(string login)
 		{
-			return repository.GetUser(login);
+			return repository.GetUserByLogin(login);
 		}
 
 		private Repository.Users.UserRole ToRepositoryUserRole(UserRole role)
