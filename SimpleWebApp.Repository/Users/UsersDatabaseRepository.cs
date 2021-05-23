@@ -23,7 +23,7 @@ namespace SimpleWebApp.Repository.Users
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
-                db.Query<PredictionDto>("DELETE FROM users WHERE email = @email", new { email }).ToList();
+                db.Query("DELETE FROM users WHERE email = @email", new { email }).ToList();
             }
         }
 
@@ -33,7 +33,7 @@ namespace SimpleWebApp.Repository.Users
             {
                 string sqlQuery = "SELECT login, password, email, userRole FROM users WHERE email = @email";
 
-                return db.QueryFirst<User>(sqlQuery, new { email });
+                return db.QueryFirstOrDefault<User>(sqlQuery, new { email });
             }
         }
 
@@ -41,7 +41,7 @@ namespace SimpleWebApp.Repository.Users
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
-                db.Query<PredictionDto>("UPDATE users SET login = @login, email = @email, userRole = @role WHERE email = @email", new { login, email, role });
+                db.Query("UPDATE users SET login = @login, email = @email, userRole = @role WHERE email = @email", new { login, email, role });
             }
         }
     }

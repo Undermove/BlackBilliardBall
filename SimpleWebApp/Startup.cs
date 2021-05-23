@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using SimpleWebApp.Repository;
+using SimpleWebApp.Repository.Users;
 
 namespace SimpleWebApp
 {
@@ -20,6 +21,8 @@ namespace SimpleWebApp
 		{
 			services.AddSingleton<IPredictionsRepository, PredictionsDatabaseRepository>();
 			services.AddSingleton<PredictionsManager>();
+			services.AddSingleton<IUsersRepository, UsersDatabaseRepository>();
+			services.AddSingleton<UsersService>();
 			services
 				.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 				.AddCookie(options => options.LoginPath = new PathString("/Auth"));
@@ -44,6 +47,12 @@ namespace SimpleWebApp
 				endpoints.MapGet("/auth", async context =>
 				{
 					string page = File.ReadAllText("site/loginPage.html");
+					await context.Response.WriteAsync(page);
+				});
+
+				endpoints.MapGet("/register", async context =>
+				{
+					string page = File.ReadAllText("site/registrationPage.html");
 					await context.Response.WriteAsync(page);
 				});
 
@@ -72,8 +81,19 @@ namespace SimpleWebApp
 					await context.Response.WriteAsync(credentials.Login);
 				});
 
+				endpoints.MapPost("/registerUser", async context =>
+				{
+					var request = await context.Request.ReadFromJsonAsync<UserRegistrationRequest>();
+
+					var pm = app.ApplicationServices.GetService<UsersService>();
+					var isSuccess = pm.TryRegisterUser(request);
+
+					await context.Response.WriteAsync(isSuccess.ToString());
+				});
+
 				endpoints.MapGet("/adminPage", async context =>
 				{
+					var user = context.User.Identity.Name;
 					string page = File.ReadAllText("site/adminPage.html");
 					await context.Response.WriteAsync(page);
 				}).RequireAuthorization();
