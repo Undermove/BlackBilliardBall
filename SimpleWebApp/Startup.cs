@@ -28,6 +28,7 @@ namespace SimpleWebApp
 				.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 				.AddCookie(options => options.LoginPath = new PathString("/Auth"));
 			services.AddAuthorization();
+			services.AddControllers();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +43,13 @@ namespace SimpleWebApp
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllerRoute(
+					name: "default",
+					pattern: "{controller}/{action}");
+			});
 
 			app.UseEndpoints(endpoints =>
 			{
@@ -131,13 +139,6 @@ namespace SimpleWebApp
 					var query = await context.Request.ReadFromJsonAsync<Prediction>();
 
 					pm.AddPrediction(query.PredictionString);
-				});
-
-				endpoints.MapGet("/getPredictions", async context =>
-				{
-					var pm = app.ApplicationServices.GetService<PredictionsManager>();
-
-					await context.Response.WriteAsJsonAsync(pm.GetAllPredictions());
 				});
 
 				endpoints.MapDelete("/deletePrediction", async context =>
