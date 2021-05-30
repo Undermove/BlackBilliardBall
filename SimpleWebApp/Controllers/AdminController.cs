@@ -1,63 +1,31 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using System.IO;
 
 namespace SimpleWebApp.Controllers
 {
-	[ApiController]
-	//[Route("{controller}/{action}")]
-	public class AdminController : ControllerBase
+	[Authorize]
+	public class AdminController : Controller
 	{
-		PredictionsManager _predictionsManager;
+		UsersService _usersService;
 
-		public AdminController(PredictionsManager predictionsManager)
+		public AdminController(UsersService usersService)
 		{
-			_predictionsManager = predictionsManager;
+			_usersService = usersService;
 		}
 
-		[HttpGet]
-		[Route("getPredictions")]
-		public ActionResult GetPredictions()
+		[Route("adminPage")]
+		public ActionResult Index()
 		{
-			var responseData = _predictionsManager.GetAllPredictions();
-			return Ok(responseData);
-		}
-
-		[HttpPost]
-		[Route("addPrediction")]
-		public ActionResult AddPrediction([FromBody] Prediction prediction)
-		{
-			if (prediction == null)
+			var userLogin = User.Identity.Name;
+			var role = _usersService.GetUserRole(userLogin);
+			if (role == UserRole.Admin)
 			{
-				return StatusCode(StatusCodes.Status400BadRequest);
+				byte[] page = System.IO.File.ReadAllBytes("site/adminPage.html");
+				return File(page, "text/html");
 			}
 
-			try
-			{
-				_predictionsManager.AddPrediction(prediction.PredictionString);
-			}
-			catch (Exception)
-			{
-				return StatusCode(StatusCodes.Status500InternalServerError);
-			}
-			
-			return Ok();
-		}
-
-		[HttpDelete]
-		[Route("deletePrediction")]
-		public ActionResult DeletePrediction([FromBody] int id)
-		{
-			_predictionsManager.DeletePrediction(id);
-			return Ok();
-		}
-
-		[HttpPut]
-		[Route("updatePrediction")]
-		public ActionResult UpdatePrediction([FromBody] PredictionUpdateRequest updateRequest)
-		{
-			_predictionsManager.UpdatePrediction(updateRequest);
-			return Ok();
+			return Unauthorized();
 		}
 	}
 }

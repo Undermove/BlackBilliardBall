@@ -98,21 +98,7 @@ namespace SimpleWebApp
 					var usersService = app.ApplicationServices.GetService<UsersService>();
 					var isSuccess = usersService.TryRegisterUser(request);
 
-					await context.Response.WriteAsync(isSuccess.ToString());
 				});
-
-				endpoints.MapGet("/adminPage", async context =>
-				{
-					var usersService = app.ApplicationServices.GetService<UsersService>();
-					var userLogin = context.User.Identity.Name;
-					var role = usersService.GetUserRole(userLogin);
-					if(role == UserRole.Admin)
-					{
-						string page = File.ReadAllText("site/adminPage.html");
-						await context.Response.WriteAsync(page);
-					}
-					await context.Response.WriteAsync("{\"result:\" \"Bad Request\"}", Encoding.UTF8);
-				}).RequireAuthorization();
 
 				endpoints.MapGet("/", async context =>
 				{
