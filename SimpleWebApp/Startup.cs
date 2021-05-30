@@ -132,28 +132,6 @@ namespace SimpleWebApp
 					var s = pm.GetRandomPrediction();
 					await context.Response.WriteAsync(s.PredictionString);
 				});
-
-				endpoints.MapPost("/addPrediction", async context =>
-				{
-					var pm = app.ApplicationServices.GetService<PredictionsManager>();
-					var query = await context.Request.ReadFromJsonAsync<Prediction>();
-
-					pm.AddPrediction(query.PredictionString);
-				});
-
-				endpoints.MapDelete("/deletePrediction", async context =>
-				{
-					var pm = app.ApplicationServices.GetService<PredictionsManager>();
-					var predictionNumber = await context.Request.ReadFromJsonAsync<int>();
-					pm.DeletePrediction(predictionNumber);
-				});
-
-				endpoints.MapPut("/updatePrediction", async context =>
-				{
-					var pm = app.ApplicationServices.GetService<PredictionsManager>();
-					var predictionUpdate = await context.Request.ReadFromJsonAsync<PredictionUpdateRequest>();
-					pm.UpdatePrediction(predictionUpdate);
-				});
 			});
 		}
 	}
