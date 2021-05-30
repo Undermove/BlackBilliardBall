@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!-- Строка нужна для подключения русского языка -->
+    <meta charset="utf-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <title>🎱Страничка!</title>
+</head>
+<body style="background-color: black">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminPage">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="predictionsPage">Predictions</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div style="
+        color: springgreen;
+        font-family: 'Calibri';
+        font-style: italic;
+        font-size: 30px">
+        <form enctype="multipart/form-data" method="post" name="fileinfo">
+            <label>File to stash:</label>
+            <input type="file" name="file" required />
+            <input type="submit" onclick="onClick()" value="Stash the file!" />
+        </form>
+        <div></div>
+    </div>
+    
+    <script>
+        // скрипт, который выполняется при загрузке страницы
+        window.onkeyup = (ev) => {
+            if (ev.key == "Enter") {
+                onClick()
+            }
+        }
+
+        async function onClick() {
+            var form = document.forms.namedItem("fileinfo");
+            form.addEventListener('submit', function (ev) {
+
+                var oOutput = document.querySelector("div"),
+                    oData = new FormData(form);
+
+                oData.append("CustomField", "This is some extra data");
+
+                var oReq = new XMLHttpRequest();
+                oReq.open("POST", "/uploadImage", true);
+                oReq.onload = function (oEvent) {
+                    if (oReq.status == 200) {
+                        oOutput.innerHTML = "Uploaded!";
+                    } else {
+                        oOutput.innerHTML = "Error " + oReq.status + " occurred when trying to upload your file.<br \/>";
+                    }
+                };
+
+                oReq.send(oData);
+                ev.preventDefault();
+            }, false);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</body>
+</html>
